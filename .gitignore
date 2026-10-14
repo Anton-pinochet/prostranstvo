@@ -1,0 +1,38 @@
+# Flutter/Dart
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+
+# Модель — 1.2 ГБ, НЕ в Git
+assets/models/*.bin
+assets/models/*.gguf
+
+# Бэкапы
+lib/*.bak
+lib/*.bak_*
+.backup_*
+
+# Архивы
+*.apk
+*.zip
+*.tar.gz
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+
+# Секреты
+.env
+*.key
+*.pem

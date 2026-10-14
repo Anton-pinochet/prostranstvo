@@ -1,0 +1,43 @@
+name: prostranstvo
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  permission_handler: ^11.3.0
+  system_info2: ^4.0.0
+  device_info_plus: ^10.0.0
+  http: ^1.2.0
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  rive: ^0.13.0
+  shared_preferences: ^2.2.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  path_provider: ^2.1.1
+  path_provider_android: 2.2.17
+  llama_flutter_android: ^0.2.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/part1.bin
+    - assets/models/part2.bin
+    - assets/animations/
+
+
+
+
