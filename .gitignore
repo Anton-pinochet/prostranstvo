@@ -36,3 +36,14 @@ Thumbs.db
 .env
 *.key
 *.pem
+
+# Бэкапы файлов (более широкие паттерны)
+*.bak
+*.bak.*
+*.bak_*
+*.backup
+*.backup.*
+*.orig
+*.rej
+*.old
+*.save
