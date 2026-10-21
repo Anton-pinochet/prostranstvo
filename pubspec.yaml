@@ -21,8 +21,12 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   path_provider: ^2.1.1
-  path_provider_android: 2.2.17
+  path: ^1.9.0
+  path_provider_android: ^2.2.20
   llama_flutter_android: ^0.2.6
+  sqlite3: ^3.0.0
+  onnxruntime_v2: ^1.23.2
+  betto_inferencing: ^0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -34,10 +38,16 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/tokenizer.json
     - assets/models/part1.bin
     - assets/models/part2.bin
     - assets/animations/
+    - assets/rag/
+    - assets/embedding_model/
 
 
 
 
+
+dependency_overrides:
+  shared_preferences_android: 2.4.28

@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:sqlite3/sqlite3.dart' hide Row;
 import 'package:flutter/services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:llama_flutter_android/llama_flutter_android.dart';
+import 'rag_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -360,11 +362,26 @@ class _SpaceScreenState extends State<SpaceScreen> {
   int _userMessageCount = 0;
 
   LlamaController get _llm => widget.llm;
+  RagService? _rag;
 
   @override
   void initState() {
     super.initState();
+    _initRag();
     _init();
+  }
+
+  Future<void> _initRag() async {
+    try {
+      final rag = RagService();
+      await rag.init(onStatus: (s) {
+        debugPrint('RAG: $s');
+      });
+      if (mounted) setState(() => _rag = rag);
+      debugPrint('✅ RAG готов');
+    } catch (e, st) {
+      debugPrint('❌ RAG init error: $e\n$st');
+    }
   }
 
   Future<void> _init() async {
@@ -425,10 +442,25 @@ class _SpaceScreenState extends State<SpaceScreen> {
     final name = prefs.getString('user_name') ?? 'друг';
     final city = prefs.getString('user_city') ?? '';
 
-    final systemPrompt = 'Ты — тёплый ассистент приложения «Пространство». '
-        'Пользователя зовут ' + name + (city.isNotEmpty ? ', он из ' + city : '') + '. '
+    var systemPrompt = 'Ты — тёплый ассистент приложения «Пространство». '
+        'Пользователя зовут $name${city.isNotEmpty ? ', он из $city' : ''}. '
         'Обращайся на «ты», по имени. НЕ выкай. НЕ извиняйся. '
         'Пиши 2-3 предложения.';
+
+    // === RAG: добавляем контекст ===
+    if (_rag != null && _rag!.isReady) {
+      try {
+        final ctx = await _rag!.buildContext(userText, k: 5);
+        if (ctx.isNotEmpty) {
+          systemPrompt += '\n\nНиже — реальные фрагменты из базы психологических консультаций. '
+              'Используй их, если они релевантны вопросу, но НЕ цитируй дословно. '
+              'Отвечай своими словами, опираясь на эти знания:\n\n$ctx';
+          debugPrint('RAG: добавлено ${ctx.length} символов контекста');
+        }
+      } catch (e) {
+        debugPrint('RAG search error: $e');
+      }
+    }
 
     final result = <ChatMessage>[
       ChatMessage(role: 'system', content: systemPrompt),
