@@ -173,8 +173,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       await _llm.loadModel(
         modelPath: modelPath,
-        threads: 4,
-        contextSize: 1536,
+        threads: 6,
+        contextSize: 768,
       );
 
       if (!mounted) return;
@@ -506,7 +506,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
       _llmSub = _llm
           .generateChat(
             messages: history,
-            maxTokens: 200,
+            maxTokens: 120,
             temperature: 0.85,
             topP: 0.92,
             topK: 50,

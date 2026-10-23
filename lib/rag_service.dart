@@ -45,12 +45,20 @@ class RagService {
       await ragDir.create(recursive: true);
     }
 
-    // 1. Копируем embeddings.db из assets (812 МБ)
+    // 1. Копируем embeddings.db из assets (по частям — лимит 1 ГБ)
     _dbPath = p.join(ragDir.path, 'embeddings.db');
     final dbFile = File(_dbPath);
     if (!await dbFile.exists()) {
-      onStatus?.call('❌ БД не найдена в $_dbPath');
-      throw Exception('БД не найдена в $_dbPath');
+      onStatus?.call('Копирую базу знаний (по частям)...');
+      final out = dbFile.openWrite();
+      try {
+        await _copyAssetInChunks('assets/rag/embeddings.db.partaa', out);
+        await _copyAssetInChunks('assets/rag/embeddings.db.partab', out);
+      } finally {
+        await out.flush();
+        await out.close();
+      }
+      debugPrint('RAG: ✅ БД склеена из частей в $_dbPath');
     }
     debugPrint('RAG: ✅ БД найдена в $_dbPath');
 
@@ -128,6 +136,21 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
   }
 
   /// Копирование asset в файл с прогрессом.
+  /// Копирует asset потоково (по 8 МБ), без загрузки целиком в память.
+  Future<void> _copyAssetInChunks(String assetKey, IOSink sink) async {
+    final data = await rootBundle.load(assetKey);
+    final total = data.lengthInBytes;
+    const chunk = 8 * 1024 * 1024;
+    var offset = 0;
+    while (offset < total) {
+      final end = (offset + chunk < total) ? offset + chunk : total;
+      final bytes = data.buffer.asUint8List(data.offsetInBytes + offset, end - offset);
+      sink.add(bytes);
+      offset = end;
+    }
+    debugPrint('RAG: скопировано $assetKey ($total байт)');
+  }
+
   Future<void> _copyAsset(
     String assetKey,
     String dstPath, {
@@ -231,6 +254,26 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
   }
 
   /// Поиск топ-k чанков по вопросу.
+  /// Определяет top-N тем по центроидам.
+  Future<List<String>> _detectTopics(Float32List emb, {int n = 2}) async {
+    final rows = _db!.select('SELECT subcategory, centroid FROM topic_centroids');
+    final scores = <String, double>{};
+    for (final row in rows) {
+      final blob = row['centroid'] as Uint8List;
+      final c = blob.buffer.asFloat32List(blob.offsetInBytes, 384);
+      var dot = 0.0;
+      for (var d = 0; d < 384; d++) dot += emb[d] * c[d];
+      scores[row['subcategory'] as String] = dot;
+    }
+    final top = (scores.entries.toList()
+          ..sort((a, b) => b.value.compareTo(a.value)))
+        .take(n)
+        .map((e) => e.key)
+        .toList();
+    debugPrint('RAG: темы = ${top.join(", ")}');
+    return top;
+  }
+
   Future<List<RagChunk>> search(String query, {int k = _kDefault}) async {
     if (!_initialized) throw StateError('RagService не инициализирован');
     final t0 = DateTime.now();
@@ -280,10 +323,17 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
     // 4. int8 × int8 → int32 (быстро на ARM)
     final scored = <int, int>{};
     final texts = <int, Map<String, dynamic>>{};
+    // --- Двухуровневый поиск: сначала темы ---
+    final topics = await _detectTopics(emb, n: 2);
+    final placeholders = List.filled(topics.length, '?').join(',');
+    final topicFilter = ' AND c.subcategory IN ($placeholders)';
+
     for (final row in _db!.select(
       'SELECT c.rowid, c.embedding_int8, c.text, c.category, c.filename '
       'FROM chunks c JOIN dart_ivf_cells v ON c.rowid = v.rowid '
       'WHERE v.cell_id IN (${probe.join(",")}) AND LENGTH(c.text) > 20'
+      '$topicFilter',
+      topics,
     )) {
       final i8 = row['embedding_int8'] as Uint8List;
       var dot = 0;
