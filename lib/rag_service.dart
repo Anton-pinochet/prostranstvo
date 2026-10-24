@@ -369,6 +369,7 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
         .take(k);
 
     final ms = DateTime.now().difference(t0).inMilliseconds;
+    debugPrint('RAG: t_emb=$_t_emb, t_ivf=$_t1, t_probe=$_t2, t_int8=$_t4, t_sort=$_t5, t_rescore=$_t7, total=$ms');
     debugPrint('RAG: search ${ms} ms, rows=${topK.length}');
 
     return topK.map((e) {

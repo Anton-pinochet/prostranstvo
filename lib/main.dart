@@ -174,7 +174,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       await _llm.loadModel(
         modelPath: modelPath,
         threads: 6,
-        contextSize: 768,
+        contextSize: 1536,
       );
 
       if (!mounted) return;
@@ -503,6 +503,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
 
       int assistantIndex = -1;
       _isGenerating = true;
+      await _llm.clearContext();  // сброс KV-кэша перед новым вопросом
       _llmSub = _llm
           .generateChat(
             messages: history,
