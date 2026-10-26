@@ -50,4 +50,6 @@ flutter:
 
 
 dependency_overrides:
+  llama_flutter_android:
+    path: ../llama_flutter_android_fork
   shared_preferences_android: 2.4.28

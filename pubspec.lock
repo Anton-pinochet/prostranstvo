@@ -6,7 +6,7 @@ packages:
     description:
       name: args
       sha256: d0481093c50b1da8910eb0bb301626d4d8eb7284aa739614d2b394ee09e3ea04
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
   async:
@@ -14,7 +14,7 @@ packages:
     description:
       name: async
       sha256: e2eb0491ba5ddb6177742d2da23904574082139b07c1e33b8503b9f46f3e1a37
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.13.1"
   betto_icu:
@@ -22,7 +22,7 @@ packages:
     description:
       name: betto_icu
       sha256: "99c1b0db26f94236e61fd69cdf70ce87e74c5ec5b151ad6e8120d94b463f5a04"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
   betto_inferencing:
@@ -30,7 +30,7 @@ packages:
     description:
       name: betto_inferencing
       sha256: "998cfb45ce46fc7ab36458a22ecfa7d996b56a7aa4a7b20d1662630b3604acc8"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
   betto_lexical:
@@ -38,7 +38,7 @@ packages:
     description:
       name: betto_lexical
       sha256: "80fff8e4e59ea9477b101e8735f1341ec5ea7ef006ca865e00f559691915603a"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
   betto_onnxrt:
@@ -46,7 +46,7 @@ packages:
     description:
       name: betto_onnxrt
       sha256: a10d0e97d14a045761310faf12af032a733aa324a8c37bc1ab38ad7320f49b67
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
   boolean_selector:
@@ -54,7 +54,7 @@ packages:
     description:
       name: boolean_selector
       sha256: "8aab1771e1243a5063b8b0ff68042d67334e3feab9e95b9490f9a6ebf73b42ea"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
   characters:
@@ -62,7 +62,7 @@ packages:
     description:
       name: characters
       sha256: faf38497bda5ead2a8c7615f4f7939df04333478bf32e4173fcb06d428b5716b
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
   clock:
@@ -70,7 +70,7 @@ packages:
     description:
       name: clock
       sha256: e51d50bca3217c9a9fa2b41a30e4a38971133f5f9ec7a3d57bae095007f1d28e
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.3"
   code_assets:
@@ -78,7 +78,7 @@ packages:
     description:
       name: code_assets
       sha256: bf394f466ba9205f1812a0433b392d6af280f155f56651eda7c18cc32ed493b8
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
   collection:
@@ -86,23 +86,23 @@ packages:
     description:
       name: collection
       sha256: "2f5709ae4d3d59dd8f7cd309b4e023046b57d8a6c82130785d2b0e5868084e76"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
   crypto:
     dependency: transitive
     description:
       name: crypto
-      sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      sha256: e3626ae6270383c9e3a549f34c9e4cd26c09ae6a9adaab2bf4737a00340efdc4
+      url: "https://pub.dev"
     source: hosted
-    version: "3.0.7"
+    version: "3.0.8"
   cupertino_icons:
     dependency: "direct main"
     description:
       name: cupertino_icons
       sha256: "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
   dart_sentencepiece_tokenizer:
@@ -110,7 +110,7 @@ packages:
     description:
       name: dart_sentencepiece_tokenizer
       sha256: "23fd14a3a7a736e0a85c329ab0227f8eaf9626ef83b1d98b6f37fbc284fca8c8"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
   device_info_plus:
@@ -118,7 +118,7 @@ packages:
     description:
       name: device_info_plus
       sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "10.1.2"
   device_info_plus_platform_interface:
@@ -126,7 +126,7 @@ packages:
     description:
       name: device_info_plus_platform_interface
       sha256: e1ea89119e34903dca74b883d0dd78eb762814f97fb6c76f35e9ff74d261a18f
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "7.0.3"
   fake_async:
@@ -134,7 +134,7 @@ packages:
     description:
       name: fake_async
       sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.3.3"
   ffi:
@@ -142,7 +142,7 @@ packages:
     description:
       name: ffi
       sha256: "6d7fd89431262d8f3125e81b50d3847a091d846eafcd4fdb88dd06f36d705a45"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
   file:
@@ -150,7 +150,7 @@ packages:
     description:
       name: file
       sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
   flutter:
@@ -163,7 +163,7 @@ packages:
     description:
       name: flutter_lints
       sha256: "3105dc8492f6183fb076ccf1f351ac3d60564bff92e20bfc4af9cc1651f4e7e1"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
   flutter_test:
@@ -181,7 +181,7 @@ packages:
     description:
       name: glob
       sha256: "218aeb56050c714f62a3182775320dfa04602b55074873e24e31bbd39bda96fb"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
   globbing:
@@ -189,7 +189,7 @@ packages:
     description:
       name: globbing
       sha256: "4f89cfaf6fa74c9c1740a96259da06bd45411ede56744e28017cc534a12b6e2d"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
   graphs:
@@ -197,7 +197,7 @@ packages:
     description:
       name: graphs
       sha256: "741bbf84165310a68ff28fe9e727332eef1407342fca52759cb21ad8177bb8d0"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
   hive:
@@ -205,7 +205,7 @@ packages:
     description:
       name: hive
       sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.3"
   hive_flutter:
@@ -213,7 +213,7 @@ packages:
     description:
       name: hive_flutter
       sha256: dca1da446b1d808a51689fb5d0c6c9510c0a2ba01e22805d492c73b68e33eecc
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
   hooks:
@@ -221,7 +221,7 @@ packages:
     description:
       name: hooks
       sha256: eaac480a35ec0814146c2c48d96aaa829e0e44a7662c88ae84c9edf4bc35651f
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
   http:
@@ -229,7 +229,7 @@ packages:
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
   http_parser:
@@ -237,7 +237,7 @@ packages:
     description:
       name: http_parser
       sha256: "178d74305e7866013777bab2c3d8726205dc5a4dd935297175b19a23a2e66571"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
   intl:
@@ -245,7 +245,7 @@ packages:
     description:
       name: intl
       sha256: "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.20.3"
   jni:
@@ -253,7 +253,7 @@ packages:
     description:
       name: jni
       sha256: "6b9ca0602fef0230e83149afbe3f9f8227e94f2bbe84a1da4f14d699742f402d"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
   jni_flutter:
@@ -261,7 +261,7 @@ packages:
     description:
       name: jni_flutter
       sha256: "0dd33d67797560f66e961a6053882d4df54bd345bf063b8fe7ea133f7ad8b191"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.0.4+1"
   jni_util:
@@ -269,7 +269,7 @@ packages:
     description:
       name: jni_util
       sha256: "1ba86da04a5f2bf18fde2edb235587e70c5b0fc5bd4ba955f46b00942c3fc35f"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
   leak_tracker:
@@ -277,7 +277,7 @@ packages:
     description:
       name: leak_tracker
       sha256: "33e2e26bdd85a0112ec15400c8cbffea70d0f9c3407491f672a2fad47915e2de"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "11.0.2"
   leak_tracker_flutter_testing:
@@ -285,7 +285,7 @@ packages:
     description:
       name: leak_tracker_flutter_testing
       sha256: "1dbc140bb5a23c75ea9c4811222756104fbcd1a27173f0c34ca01e16bea473c1"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "3.0.10"
   leak_tracker_testing:
@@ -293,7 +293,7 @@ packages:
     description:
       name: leak_tracker_testing
       sha256: "8d5a2d49f4a66b49744b23b018848400d23e54caf9463f4eb20df3eb8acb2eb1"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
   lints:
@@ -301,23 +301,22 @@ packages:
     description:
       name: lints
       sha256: "12f842a479589fea194fe5c5a3095abc7be0c1f2ddfa9a0e76aed1dbd26a87df"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
   llama_flutter_android:
     dependency: "direct main"
     description:
-      name: llama_flutter_android
-      sha256: "7f31b242a8a19ad2ee3a7cbf1ed4ac3bb17c19d4e360d19ae1ea24bdd86f5b05"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
-    source: hosted
+      path: "../llama_flutter_android_fork"
+      relative: true
+    source: path
     version: "0.2.6"
   logging:
     dependency: transitive
     description:
       name: logging
       sha256: c8245ada5f1717ed44271ed1c26b8ce85ca3228fd2ffdb75468ab01979309d61
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
   matcher:
@@ -325,7 +324,7 @@ packages:
     description:
       name: matcher
       sha256: "31bd099b47c10cd1aeb55146a2d46ce0277630ecef3f7dae54ad7873f36696cd"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.12.20"
   material_color_utilities:
@@ -333,7 +332,7 @@ packages:
     description:
       name: material_color_utilities
       sha256: "9c337007e82b1889149c82ed242ed1cb24a66044e30979c44912381e9be4c48b"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.13.0"
   meta:
@@ -341,7 +340,7 @@ packages:
     description:
       name: meta
       sha256: "307249ce4ff29d58a18e97f6345f539382eb9c9c29ecda628900f31de0443dd9"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.19.0"
   native_toolchain_c:
@@ -349,7 +348,7 @@ packages:
     description:
       name: native_toolchain_c
       sha256: a1c26117c48cebe5677b0cf0e33a980a79a7c5577effc86f52e5a0d309cdcb60
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.19.3"
   objective_c:
@@ -357,7 +356,7 @@ packages:
     description:
       name: objective_c
       sha256: b7fb95a6d9a4f009edd63dc5ac69f07420b23a16161c6dd8660290b59c602e8e
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "9.5.0"
   onnxruntime_v2:
@@ -365,7 +364,7 @@ packages:
     description:
       name: onnxruntime_v2
       sha256: a3a1f7baf40c6a77b4d359489643232414a4ee2e934d865dd7d30b758abaeef7
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.23.2+2"
   package_config:
@@ -373,7 +372,7 @@ packages:
     description:
       name: package_config
       sha256: ffcf4cf3d6c0b74ac43708d9f56625506e8a68aa935abe9d267a7330f320eb5d
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
   path:
@@ -381,7 +380,7 @@ packages:
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
   path_provider:
@@ -389,7 +388,7 @@ packages:
     description:
       name: path_provider
       sha256: a7f4874f987173da295a61c181b8ee71dab59b332a486b391babf26a1b884825
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.1.6"
   path_provider_android:
@@ -397,7 +396,7 @@ packages:
     description:
       name: path_provider_android
       sha256: "69cbd515a62b94d32a7944f086b2f82b4ac40a1d45bebfc00813a430ab2dabcd"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
   path_provider_foundation:
@@ -405,7 +404,7 @@ packages:
     description:
       name: path_provider_foundation
       sha256: "2a376b7d6392d80cd3705782d2caa734ca4727776db0b6ec36ef3f1855197699"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
   path_provider_linux:
@@ -413,7 +412,7 @@ packages:
     description:
       name: path_provider_linux
       sha256: "58c2005f147315b11e9b4a7bc889cd5203e250cba8e3f012dae259b4972b5c16"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
   path_provider_platform_interface:
@@ -421,7 +420,7 @@ packages:
     description:
       name: path_provider_platform_interface
       sha256: "484838772624c3a4b94f1e44a3e19897fee738f2d5c4ce448443b0417f7c9dda"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.1.3"
   path_provider_windows:
@@ -429,7 +428,7 @@ packages:
     description:
       name: path_provider_windows
       sha256: bd6f00dbd873bfb70d0761682da2b3a2c2fccc2b9e84c495821639601d81afe7
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
   permission_handler:
@@ -437,7 +436,7 @@ packages:
     description:
       name: permission_handler
       sha256: "59adad729136f01ea9e35a48f5d1395e25cba6cea552249ddbe9cf950f5d7849"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "11.4.0"
   permission_handler_android:
@@ -445,23 +444,23 @@ packages:
     description:
       name: permission_handler_android
       sha256: d3971dcdd76182a0c198c096b5db2f0884b0d4196723d21a866fc4cdea057ebc
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "12.1.0"
   permission_handler_apple:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: "066bbbc60031b63b916a3871e7bb4b6a8c5e7cec8146dafec53d1da304eff0a5"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      sha256: b69e6b8300f9584af5ab81b41cdaa544e1b45e6fca0a30b0f9a9a120d90fc8a5
+      url: "https://pub.dev"
     source: hosted
-    version: "9.6.2"
+    version: "9.6.4"
   permission_handler_html:
     dependency: transitive
     description:
       name: permission_handler_html
       sha256: "6ea98b3f17f60d3b527f2647ed2ab4dc0f6bfe25b22cb1c363f5d8f62252f6ac"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.4+1"
   permission_handler_platform_interface:
@@ -469,7 +468,7 @@ packages:
     description:
       name: permission_handler_platform_interface
       sha256: ed86a61c190258fdd65de395ea0632822e3415c1faec38eae0c31b479c28a531
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "4.4.1"
   permission_handler_windows:
@@ -477,7 +476,7 @@ packages:
     description:
       name: permission_handler_windows
       sha256: caeae01858a0a7d2df67a445ac98e1ad95e55a0e77c73044f4e9b1c8c2289cbd
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
   platform:
@@ -485,7 +484,7 @@ packages:
     description:
       name: platform
       sha256: a36d119c13416516a7b5913fbe8af8531e11633d784c550b2125f76c758524ec
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
   plugin_platform_interface:
@@ -493,7 +492,7 @@ packages:
     description:
       name: plugin_platform_interface
       sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
   pub_semver:
@@ -501,7 +500,7 @@ packages:
     description:
       name: pub_semver
       sha256: "261236774e8b1d69cfc6b9eabbc96c40f25e7a2d6b171f3385d4f65d5734fb24"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
   record_use:
@@ -509,7 +508,7 @@ packages:
     description:
       name: record_use
       sha256: "1cb8564af8d43b464294411db9217f5ec04891c6f22ee2c32d73ae05e88a6bd2"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
   rive:
@@ -517,7 +516,7 @@ packages:
     description:
       name: rive
       sha256: "2551a44fa766a7ed3f52aa2b94feda6d18d00edc25dee5f66e72e9b365bb6d6c"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.13.20"
   rive_common:
@@ -525,7 +524,7 @@ packages:
     description:
       name: rive_common
       sha256: "2ba42f80d37a4efd0696fb715787c4785f8a13361e8aea9227c50f1e78cf763a"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.4.15"
   shared_preferences:
@@ -533,7 +532,7 @@ packages:
     description:
       name: shared_preferences
       sha256: "1e85e0dccf5b4a016077fea7dfbb4a7cb39c759ac1596fcf60c06deadb7da91f"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.5.6"
   shared_preferences_android:
@@ -541,7 +540,7 @@ packages:
     description:
       name: shared_preferences_android
       sha256: "1e12aafe408aa50da80edfd679a2a6bf63ba7ab37c7fa98286da459a757b3399"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.28"
   shared_preferences_foundation:
@@ -549,7 +548,7 @@ packages:
     description:
       name: shared_preferences_foundation
       sha256: "2ec3934efa51e46117f23031cc141b8fc878e8525b94ec1ea4f7f586cf1b47ea"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.5.7"
   shared_preferences_linux:
@@ -557,7 +556,7 @@ packages:
     description:
       name: shared_preferences_linux
       sha256: "580abfd40f415611503cae30adf626e6656dfb2f0cee8f465ece7b6defb40f2f"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
   shared_preferences_platform_interface:
@@ -565,7 +564,7 @@ packages:
     description:
       name: shared_preferences_platform_interface
       sha256: "649dc798a33931919ea356c4305c2d1f81619ea6e92244070b520187b5140ef9"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
   shared_preferences_web:
@@ -573,7 +572,7 @@ packages:
     description:
       name: shared_preferences_web
       sha256: c49bd060261c9a3f0ff445892695d6212ff603ef3115edbb448509d407600019
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
   shared_preferences_windows:
@@ -581,7 +580,7 @@ packages:
     description:
       name: shared_preferences_windows
       sha256: "94ef0f72b2d71bc3e700e025db3710911bd51a71cefb65cc609dd0d9a982e3c1"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
   sky_engine:
@@ -594,7 +593,7 @@ packages:
     description:
       name: snowball_stemmer
       sha256: cc2c323e3a203abe24714d6f9db006baf858100bdf12d3f3972a63605c33bb3d
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
   source_span:
@@ -602,23 +601,23 @@ packages:
     description:
       name: source_span
       sha256: "56a02f1f4cd1a2d96303c0144c93bd6d909eea6bee6bf5a0e0b685edbd4c47ab"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.10.2"
   sqlite3:
     dependency: "direct main"
     description:
       name: sqlite3
-      sha256: "144132790ec1947fad9f3ddceffd0af2ab80a1f0d1e81a4d094ee6707ec3df0b"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      sha256: "5340531ad17f386ae444873f643f281060b6238cc702edeee6b1e90bc4c6874e"
+      url: "https://pub.dev"
     source: hosted
-    version: "3.7.1"
+    version: "3.8.0"
   stack_trace:
     dependency: transitive
     description:
       name: stack_trace
       sha256: "277654b3034d17ac6f9f1cb5595db011b1d5d41e8806866db28e0abaa101c490"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.12.2"
   stream_channel:
@@ -626,7 +625,7 @@ packages:
     description:
       name: stream_channel
       sha256: "969e04c80b8bcdf826f8f16579c7b14d780458bd97f56d107d3950fdbeef059d"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
   string_scanner:
@@ -634,23 +633,23 @@ packages:
     description:
       name: string_scanner
       sha256: "921cd31725b72fe181906c6a94d987c78e3b98c2e205b397ea399d4054872b43"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
   system_info2:
     dependency: "direct main"
     description:
       name: system_info2
-      sha256: b937736ecfa63c45b10dde1ceb6bb30e5c0c340e14c441df024150679d65ac43
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      sha256: "2d5e586c5e6b569d2e3afab1e61542d8fc0603be2d6ee671e573c041541a1541"
+      url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   term_glyph:
     dependency: transitive
     description:
       name: term_glyph
       sha256: "7f554798625ea768a7518313e58f83891c7f5024f88e46e7182a4558850a4b8e"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.2.2"
   test_api:
@@ -658,7 +657,7 @@ packages:
     description:
       name: test_api
       sha256: "2a122cbe059f8b610d3a5415f42e255b6c17b1f21eee1d960f31080237fb4f11"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
   typed_data:
@@ -666,7 +665,7 @@ packages:
     description:
       name: typed_data
       sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
   vector_math:
@@ -674,7 +673,7 @@ packages:
     description:
       name: vector_math
       sha256: "92b9910f66ed1057fd4da7b040ae7c74cafacf885bdc81be496928d5049b032d"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
   vm_service:
@@ -682,23 +681,23 @@ packages:
     description:
       name: vm_service
       sha256: "89b11d62e1040ee681af3b4f1c97a803ecbf010c6e8b9c5896ee5b08c3bf7b78"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "15.4.0"
   web:
     dependency: transitive
     description:
       name: web
-      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      sha256: e119e82ac4795c7925103b7cf3768191f33941b99e7ccffbd6c645201d9f606b
+      url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "1.1.2"
   win32:
     dependency: transitive
     description:
       name: win32
       sha256: d7cb55e04cd34096cd3a79b3330245f54cb96a370a1c27adb3c84b917de8b08e
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "5.15.0"
   win32_registry:
@@ -706,7 +705,7 @@ packages:
     description:
       name: win32_registry
       sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.5"
   xdg_directories:
@@ -714,7 +713,7 @@ packages:
     description:
       name: xdg_directories
       sha256: "7a3f37b05d989967cdddcbb571f1ea834867ae2faa29725fd085180e0883aa15"
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
   yaml:
@@ -722,7 +721,7 @@ packages:
     description:
       name: yaml
       sha256: f67cdd8e07d3c6329146aaef1ba043542b3134c12489f553ca9a7435d1068aea
-      url: "https://mirrors.cloud.tencent.com/dart-pub/"
+      url: "https://pub.dev"
     source: hosted
     version: "3.1.4"
 sdks:
