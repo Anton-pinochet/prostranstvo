@@ -173,8 +173,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       await _llm.loadModel(
         modelPath: modelPath,
-        threads: 6,
+        threads: 4,
+        nThreadsBatch: 8,
         contextSize: 1536,
+        gpuLayers: 0,
       );
 
       if (!mounted) return;
