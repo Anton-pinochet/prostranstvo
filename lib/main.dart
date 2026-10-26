@@ -106,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     _nameController.dispose();
     _cityController.dispose();
-    super.dispose();
+        super.dispose();
   }
 
   Future<void> _initLLM() async {
@@ -356,6 +356,9 @@ class _SpaceScreenState extends State<SpaceScreen> {
   List<String> _messages = [];
   bool _isTyping = false;
   bool _isGenerating = false;
+  bool _isThinking = false;
+  int _dotsCount = 0;
+  Timer? _dotsTimer;
   String _llmStatus = 'LLM готова (Qwen 1.5B Q5)';
   StreamSubscription<String>? _llmSub;
   String _llmBuffer = '';
@@ -369,6 +372,12 @@ class _SpaceScreenState extends State<SpaceScreen> {
     super.initState();
     _initRag();
     _init();
+    _dotsTimer = Timer.periodic(const Duration(milliseconds: 400), (t) {
+      if (!mounted) return;
+      setState(() {
+        _dotsCount = (_dotsCount + 1) % 4;
+      });
+    });
   }
 
   Future<void> _initRag() async {
@@ -394,6 +403,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
   @override
   void dispose() {
     _llmSub?.cancel();
+    _dotsTimer?.cancel();
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -494,7 +504,8 @@ class _SpaceScreenState extends State<SpaceScreen> {
   Future<void> _generateReply(String userText) async {
     setState(() {
       _llmBuffer = '';
-      _isTyping = true;
+      _isThinking = true;
+      _isTyping = false;
     });
 
     try {
@@ -519,6 +530,8 @@ class _SpaceScreenState extends State<SpaceScreen> {
           _llmBuffer += token;
           setState(() {
             if (assistantIndex == -1) {
+              _isThinking = false;
+              _isTyping = true;
               _messages.add('[Ассистент] $_llmBuffer');
               assistantIndex = _messages.length - 1;
             } else {
@@ -529,6 +542,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
         },
         onDone: () async {
           if (!mounted) return;
+          _isThinking = false;
           _isTyping = false;
           setState(() {});
           await Future.delayed(const Duration(milliseconds: 300));
@@ -635,15 +649,27 @@ class _SpaceScreenState extends State<SpaceScreen> {
                               },
                             ),
                     ),
-                    if (_isTyping)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                    if (_isThinking || _isTyping)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFE6C9A8))),
-                            SizedBox(width: 8),
-                            Text('ИИ печатает...', style: TextStyle(color: Colors.white54, fontSize: 12)),
+                            Text(
+                              _isThinking ? 'ИИ думает' : 'ИИ печатает',
+                              style: const TextStyle(color: Colors.white54, fontSize: 12),
+                            ),
+                            const SizedBox(width: 4),
+                            SizedBox(
+                              width: 32,
+                              child: Text(
+                                '.' * _dotsCount,
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.clip,
+                                style: const TextStyle(color: Color(0xFFE6C9A8), fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 1),
+                              ),
+                            ),
                           ],
                         ),
                       ),
