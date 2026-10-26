@@ -30,7 +30,7 @@ class RagService {
   // Параметры
   static const int _dim = 384;
   static const int _maxLen = 512;
-  static const int _kDefault = 5;
+  static const int _kDefault = 3;
 
   bool get isReady => _initialized;
 
@@ -133,6 +133,15 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
 
     _initialized = true;
     onStatus?.call('RAG готов');
+
+    // Warm-up: прогреваем ONNX и SQLite (первый поиск ~3000ms → ~400ms)
+    try {
+      final sw = Stopwatch()..start();
+      await search('привет');
+      debugPrint('RAG: warm-up ${sw.elapsedMilliseconds} ms');
+    } catch (e) {
+      debugPrint('RAG: warm-up failed: $e');
+    }
   }
 
   /// Копирование asset в файл с прогрессом.
@@ -307,79 +316,42 @@ _session = OrtSession.fromBuffer(modelBytes, sessionOptions);
         .toList();
 
     _t2 = _sw.elapsedMilliseconds; _sw.reset(); _sw.start();
-    // 3. Квантуем запрос в int8 (один раз)
-    final qInt8 = Int8List(384);
-    var maxAbs = 0.0;
-    for (var d = 0; d < 384; d++) {
-      final v = emb[d].abs();
-      if (v > maxAbs) maxAbs = v;
-    }
-    if (maxAbs == 0) maxAbs = 1.0;
-    for (var d = 0; d < 384; d++) {
-      qInt8[d] = (emb[d] / maxAbs * 127).round().clamp(-127, 127);
-    }
-
-    _t3 = _sw.elapsedMilliseconds; _sw.reset(); _sw.start();
-    // 4. int8 × int8 → int32 (быстро на ARM)
-    final scored = <int, int>{};
-    final texts = <int, Map<String, dynamic>>{};
-    // --- Двухуровневый поиск: сначала темы ---
+    // 3+4+5+6. SQL: vec_distance_cosine в C + тема + IVF, без BLOB в Dart
     final topics = await _detectTopics(emb, n: 2);
-    final placeholders = List.filled(topics.length, '?').join(',');
-    final topicFilter = ' AND c.subcategory IN ($placeholders)';
+    final topicPlaceholders = List.filled(topics.length, '?').join(',');
+    final cellPlaceholders = List.filled(probe.length, '?').join(',');
 
-    for (final row in _db!.select(
-      'SELECT c.rowid, c.embedding_int8, c.text, c.category, c.filename '
+    final embBlob = emb is Float32List
+        ? emb.buffer.asUint8List(emb.offsetInBytes, emb.lengthInBytes)
+        : Float32List.fromList(emb).buffer.asUint8List();
+    final rows = _db!.select(
+      'SELECT c.rowid, c.text, c.category, c.filename, '
+      'vec_distance_cosine(c.embedding, ?) AS dist '
       'FROM chunks c JOIN dart_ivf_cells v ON c.rowid = v.rowid '
-      'WHERE v.cell_id IN (${probe.join(",")}) AND LENGTH(c.text) > 20'
-      '$topicFilter',
-      topics,
-    )) {
-      final i8 = row['embedding_int8'] as Uint8List;
-      var dot = 0;
-      for (var d = 0; d < 384; d++) dot += qInt8[d] * i8[d];
-      scored[row['rowid'] as int] = dot;
-      texts[row['rowid'] as int] = row;
-    }
+      'WHERE v.cell_id IN ($cellPlaceholders) '
+      '  AND LENGTH(c.text) > 20 '
+      '  AND c.subcategory IN ($topicPlaceholders) '
+      'ORDER BY dist ASC LIMIT ?',
+      [embBlob, ...probe, ...topics, k],
+    );
 
     _t4 = _sw.elapsedMilliseconds; _sw.reset(); _sw.start();
-    // 5. top-50 по int dot
-    final top50 = (scored.entries.toList()
-          ..sort((a, b) => b.value.compareTo(a.value)))
-        .take(50)
-        .map((e) => e.key)
-        .toList();
 
-    _t5 = _sw.elapsedMilliseconds; _sw.reset(); _sw.start();
-    // 6. Rescore top-50 float32 (точный косинус)
-    final rescored = <int, double>{};
-    for (final rowid in top50) {
-      final row = _db!.select(
-        'SELECT embedding FROM chunks WHERE rowid = ?', [rowid]
-      ).first;
-      final f32 = (row['embedding'] as Uint8List).buffer.asFloat32List(0, 384);
-      var dot = 0.0;
-      for (var d = 0; d < 384; d++) dot += emb[d] * f32[d];
-      rescored[rowid] = 1.0 - dot;
-    }
-
-    _t7 = _sw.elapsedMilliseconds; _sw.reset(); _sw.start();
-    final topK = (rescored.entries.toList()
-          ..sort((a, b) => a.value.compareTo(b.value)))
-        .take(k);
+    final topK = rows.map((row) => MapEntry(row['rowid'] as int, row)).toList();
+    
 
     final ms = DateTime.now().difference(t0).inMilliseconds;
     debugPrint('RAG: t_emb=$_t_emb, t_ivf=$_t1, t_probe=$_t2, t_int8=$_t4, t_sort=$_t5, t_rescore=$_t7, total=$ms');
     debugPrint('RAG: search ${ms} ms, rows=${topK.length}');
 
-    return topK.map((e) {
-      final r = texts[e.key]!;
+    return topK.map((entry) {
+      final row = entry.value;
       return RagChunk(
-        rowid: e.key,
-        distance: e.value,
-        text: r['text'] as String,
-        category: r['category'] as String,
-        filename: r['filename'] as String,
+        rowid: entry.key,
+        distance: (row['dist'] as num).toDouble(),
+        text: row['text'] as String,
+        category: row['category'] as String,
+        filename: row['filename'] as String,
       );
     }).toList();
   }

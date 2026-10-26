@@ -452,19 +452,16 @@ class _SpaceScreenState extends State<SpaceScreen> {
     final name = prefs.getString('user_name') ?? 'друг';
     final city = prefs.getString('user_city') ?? '';
 
-    var systemPrompt = 'Ты — тёплый ассистент приложения «Пространство». '
+    var systemPrompt = 'Ты — тёплый ассистент «Пространство». '
         'Пользователя зовут $name${city.isNotEmpty ? ', он из $city' : ''}. '
-        'Обращайся на «ты», по имени. НЕ выкай. НЕ извиняйся. '
-        'Пиши 2-3 предложения.';
+        'На «ты», 2-3 предложения, без извинений.';
 
     // === RAG: добавляем контекст ===
     if (_rag != null && _rag!.isReady) {
       try {
-        final ctx = await _rag!.buildContext(userText, k: 5);
+        final ctx = await _rag!.buildContext(userText, k: 3);
         if (ctx.isNotEmpty) {
-          systemPrompt += '\n\nНиже — реальные фрагменты из базы психологических консультаций. '
-              'Используй их, если они релевантны вопросу, но НЕ цитируй дословно. '
-              'Отвечай своими словами, опираясь на эти знания:\n\n$ctx';
+          systemPrompt += '\n\nФрагменты из базы психологических консультаций:\n\n$ctx';
           debugPrint('RAG: добавлено ${ctx.length} символов контекста');
         }
       } catch (e) {

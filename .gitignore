@@ -52,3 +52,10 @@ Thumbs.db
 assets/rag/
 assets/embedding_model/
 assets/tokenizer.json
+
+# Временные скрипты разработчика (не коммитить)
+fix_*.sh
+patch_*.sh
+rag_watch.sh
+profile_rag.sh
+migrate_vec_chunks.py
