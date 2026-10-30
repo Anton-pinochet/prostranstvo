@@ -5,10 +5,13 @@ import 'package:sqlite3/sqlite3.dart' hide Row;
 import 'package:flutter/services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:llama_flutter_android/llama_flutter_android.dart';
 import 'rag_service.dart';
+import 'model_downloader.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:crypto/crypto.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -116,56 +119,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _llmProgress = 0.0;
       });
 
-      final docDir = await getApplicationDocumentsDirectory();
-      final modelPath = p.join(docDir.path, 'qwen2.5-1.5b-instruct-q5_k_m.gguf');
-      final modelFile = File(modelPath);
-
-      const totalSize = 1285494304;
-
-      int currentSize = 0;
-      if (await modelFile.exists()) {
-        currentSize = await modelFile.length();
-      }
-
-      if (currentSize != totalSize) {
-        if (await modelFile.exists()) {
-          await modelFile.delete();
-        }
-
-        final sink = modelFile.openWrite();
-
-        // Часть 1
-        setState(() => _llmStatus = 'Часть 1/2 (600 МБ)...');
-        final p1 = await rootBundle.load('assets/models/part1.bin');
-        final b1 = p1.buffer.asUint8List();
-        sink.add(b1);
-        await sink.flush();
-        final pct1 = (b1.length / totalSize * 100).toStringAsFixed(1);
-        setState(() {
-          _llmProgress = b1.length / totalSize;
-          _llmStatus = 'Часть 1/2 готова: ' + pct1 + '%';
-        });
-        await Future.delayed(const Duration(milliseconds: 100));
-
-        // Часть 2
-        setState(() => _llmStatus = 'Часть 2/2 (626 МБ)...');
-        final p2 = await rootBundle.load('assets/models/part2.bin');
-        final b2 = p2.buffer.asUint8List();
-        sink.add(b2);
-        await sink.flush();
-        await sink.close();
-        final pct2 = ((b1.length + b2.length) / totalSize * 100).toStringAsFixed(1);
-        setState(() {
-          _llmProgress = 1.0;
-          _llmStatus = 'Распаковка завершена: ' + pct2 + '%';
-        });
-      }
-
-      final finalSize = await modelFile.length();
-      if (finalSize != totalSize) {
-        throw Exception('Файл неполный: ' + finalSize.toString() + ' / ' + totalSize.toString());
-      }
-
+      final modelPath = await ensureModel(
+        onProgress: (received, total) {
+          final pct = total > 0 ? (received / total * 100).toStringAsFixed(1) : '?';
+          debugPrint('Модель: $received / $total ($pct%)');
+          if (mounted) {
+            setState(() {
+              _llmProgress = total > 0 ? received / total : 0.0;
+              _llmStatus = 'Скачивание модели: $pct%';
+            });
+          }
+        },
+      );
       setState(() {
         _llmStatus = 'Загрузка модели в память...';
         _llmProgress = 1.0;
@@ -173,8 +138,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       await _llm.loadModel(
         modelPath: modelPath,
-        threads: 4,
-        nThreadsBatch: 8,
+        threads: 2,
+        nThreadsBatch: 2,
         contextSize: 1536,
         gpuLayers: 0,
       );
@@ -353,6 +318,10 @@ class SpaceScreen extends StatefulWidget {
 }
 
 class _SpaceScreenState extends State<SpaceScreen> {
+  String? _kvCachePath;
+  String? _kvCacheHash;
+  static const String _kvHashPrefKey = 'kv_prefix_hash';
+  static const String _kvNameCityKey = 'kv_name_city';
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   List<String> _messages = [];
@@ -361,7 +330,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
   bool _isThinking = false;
   int _dotsCount = 0;
   Timer? _dotsTimer;
-  String _llmStatus = 'LLM готова (Qwen 1.5B Q5)';
+  String _llmStatus = 'LLM готова (Qwen 1.5B Q4_K_M)';
   StreamSubscription<String>? _llmSub;
   String _llmBuffer = '';
   int _userMessageCount = 0;
@@ -372,6 +341,17 @@ class _SpaceScreenState extends State<SpaceScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Инвалидация KV-кэша при смене имени/города (этап 5)
+    () async {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = prefs.getString(_kvNameCityKey);
+      final current = '${widget.name}|${widget.city}';
+      if (saved != current) {
+        await _invalidateKvCache();
+        await prefs.setString(_kvNameCityKey, current);
+      }
+    }();
     _initRag();
     _init();
     _dotsTimer = Timer.periodic(const Duration(milliseconds: 400), (t) {
@@ -454,16 +434,28 @@ class _SpaceScreenState extends State<SpaceScreen> {
     final name = prefs.getString('user_name') ?? 'друг';
     final city = prefs.getString('user_city') ?? '';
 
-    var systemPrompt = 'Ты — тёплый ассистент «Пространство». '
+    var systemPrompt = 'Ты — тёплый собеседник «Пространство». '
         'Пользователя зовут $name${city.isNotEmpty ? ', он из $city' : ''}. '
-        'На «ты», 2-3 предложения, без извинений.';
+        'На «ты». Это место, где можно выговориться.\n\n'
+        'Твоя задача:\n'
+        '- Отразить чувство пользователя.\n'
+        '- Показать, что ты рядом и не осуждаешь.\n'
+        '- Если пользователь ПРЯМО просит совет ("как справиться", "что делать") — '
+        'дай 1-2 конкретных шага мягко, без давления.\n'
+        '- Если не просит — не давай советов, просто будь рядом и задай открытый вопрос.\n'
+        '- 2-4 предложения. Закончи мысль полностью, не обрывай на полуслове.';
 
     // === RAG: добавляем контекст ===
     if (_rag != null && _rag!.isReady) {
       try {
-        final ctx = await _rag!.buildContext(userText, k: 3);
+        final rawCtx = await _rag!.buildContext(userText, k: 2);
+        // Обрезка каждого фрагмента до ~200 символов, чтобы не раздувать промпт
+        final ctx = rawCtx
+            .split('\n\n')
+            .map((f) => f.length > 200 ? '${f.substring(0, 200)}…' : f)
+            .join('\n\n');
         if (ctx.isNotEmpty) {
-          systemPrompt += '\n\nФрагменты из базы психологических консультаций:\n\n$ctx';
+          systemPrompt += '\n\nПримеры того, как профессиональные психологи отвечали на похожие переживания. НЕ цитируй их дословно, используй как образец тона и структуры:\n\n$ctx';
           debugPrint('RAG: добавлено ${ctx.length} символов контекста');
         }
       } catch (e) {
@@ -477,16 +469,21 @@ class _SpaceScreenState extends State<SpaceScreen> {
 
     final filtered = <String>[];
     for (final m in _messages) {
-      if (m.startsWith('⚠️') || m.startsWith('[Ассистент]')) continue;
+      if (m.startsWith('⚠️')) continue;
       filtered.add(m);
     }
+    // История: только последние 2 пары (4 сообщения), чтобы не раздувать промпт
     final recent = filtered.length > 4 ? filtered.sublist(filtered.length - 4) : filtered;
-    for (var i = 0; i < recent.length; i++) {
-      final role = (i % 2 == 0) ? 'user' : 'assistant';
-      result.add(ChatMessage(role: role, content: recent[i]));
+    for (final m in recent) {
+      if (m.startsWith('[Ассистент] ')) {
+        result.add(ChatMessage(role: 'assistant', content: m.substring('[Ассистент] '.length)));
+      } else {
+        result.add(ChatMessage(role: 'user', content: m));
+      }
     }
-
-    result.add(ChatMessage(role: 'user', content: userText));
+    if (result.length == 1) {
+      result.add(ChatMessage(role: 'user', content: userText));
+    }
     return result;
   }
 
@@ -500,6 +497,59 @@ class _SpaceScreenState extends State<SpaceScreen> {
     return text.trim();
   }
 
+  Future<(List<ChatMessage>, bool)> _prepareKvCache(String userText) async {
+    final prefs = await SharedPreferences.getInstance();
+    final docDir = await getApplicationDocumentsDirectory();
+    final kvPath = '${docDir.path}/kv_prefix.bin';
+
+    final name = prefs.getString('user_name') ?? 'друг';
+    final city = prefs.getString('user_city') ?? '';
+    var prefix = 'name=$name|city=$city';
+    if (_rag != null && _rag!.isReady) {
+      try {
+        final rawCtx = await _rag!.buildContext(userText, k: 2);
+        final ctx = rawCtx
+            .split('\n\n')
+            .map((f) => f.length > 200 ? '${f.substring(0, 200)}…' : f)
+            .join('\n\n');
+        prefix += '|rag=$ctx';
+      } catch (_) {}
+    }
+    final hash = sha256.convert(utf8.encode(prefix)).toString();
+
+    final savedHash = prefs.getString(_kvHashPrefKey);
+    final kvExists = await File(kvPath).exists();
+
+    if (savedHash == hash && kvExists) {
+      final ok = await _llm.loadKvState(0, kvPath);
+      if (ok) {
+        _kvCachePath = kvPath;
+        _kvCacheHash = hash;
+        debugPrint('[KV] restored, sending only new user message');
+        return (<ChatMessage>[ChatMessage(role: 'user', content: userText)], false);
+      }
+      debugPrint('[KV] loadKvState failed, falling back to full prefill');
+    }
+
+    await _llm.clearContext();
+    final fullHistory = await _buildChatHistory(userText);
+    _kvCachePath = kvPath;
+    _kvCacheHash = hash;
+    return (fullHistory, true);
+  }
+
+  Future<void> _invalidateKvCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_kvHashPrefKey);
+    await prefs.remove(_kvNameCityKey);
+    final docDir = await getApplicationDocumentsDirectory();
+    final f = File('${docDir.path}/kv_prefix.bin');
+    if (await f.exists()) await f.delete();
+    _kvCachePath = null;
+    _kvCacheHash = null;
+    debugPrint('[KV] cache invalidated');
+  }
+
   Future<void> _generateReply(String userText) async {
     setState(() {
       _llmBuffer = '';
@@ -508,20 +558,20 @@ class _SpaceScreenState extends State<SpaceScreen> {
     });
 
     try {
-      final history = await _buildChatHistory(userText);
+      final (messages, needSaveKv) = await _prepareKvCache(userText);
       _llmSub?.cancel();
 
       int assistantIndex = -1;
       _isGenerating = true;
-      await _llm.clearContext();  // сброс KV-кэша перед новым вопросом
       _llmSub = _llm
           .generateChat(
-            messages: history,
-            maxTokens: 120,
-            temperature: 0.85,
+            messages: messages,
+            template: 'chatml',
+            maxTokens: 250,
+            temperature: 0.75,
             topP: 0.92,
             topK: 50,
-            repeatPenalty: 1.15,
+            repeatPenalty: 1.35,
           )
           .listen(
         (token) {
@@ -531,6 +581,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
             if (assistantIndex == -1) {
               _isThinking = false;
               _isTyping = true;
+              debugPrint('AI: $_llmBuffer');
               _messages.add('[Ассистент] $_llmBuffer');
               assistantIndex = _messages.length - 1;
             } else {
@@ -555,6 +606,22 @@ class _SpaceScreenState extends State<SpaceScreen> {
             }
           }
           setState(() => _isTyping = false);
+                    if (needSaveKv && _kvCachePath != null && _kvCacheHash != null) {
+            try {
+              final ok = await _llm.saveKvState(0, _kvCachePath!);
+              if (ok) {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString(_kvHashPrefKey, _kvCacheHash!);
+                await prefs.setString(_kvNameCityKey,
+                    '${widget.name}|${widget.city}');
+                debugPrint('[KV] saved prefix to ${_kvCachePath!}');
+              } else {
+                debugPrint('[KV] saveKvState returned false');
+              }
+            } catch (e) {
+              debugPrint('[KV] saveKvState error: $e');
+            }
+          }
           _saveMessages();
         },
         onError: (e) {
@@ -580,6 +647,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
     final text = _messageController.text.trim();
     if (text.isEmpty || _isTyping || _isGenerating) return;
 
+    debugPrint('USER: $text');
     setState(() {
       _messages.add(text);
       _messageController.clear();
