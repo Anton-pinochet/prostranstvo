@@ -429,12 +429,11 @@ class _SpaceScreenState extends State<SpaceScreen> {
     });
   }
 
-  Future<List<ChatMessage>> _buildChatHistory(String userText) async {
+  Future<String> _buildSystemPrompt() async {
     final prefs = await SharedPreferences.getInstance();
     final name = prefs.getString('user_name') ?? 'друг';
     final city = prefs.getString('user_city') ?? '';
-
-    var systemPrompt = 'Ты — тёплый собеседник «Пространство». '
+    return 'Ты — тёплый собеседник «Пространство». '
         'Пользователя зовут $name${city.isNotEmpty ? ', он из $city' : ''}. '
         'На «ты». Это место, где можно выговориться.\n\n'
         'Твоя задача:\n'
@@ -444,27 +443,40 @@ class _SpaceScreenState extends State<SpaceScreen> {
         'дай 1-2 конкретных шага мягко, без давления.\n'
         '- Если не просит — не давай советов, просто будь рядом и задай открытый вопрос.\n'
         '- 2-4 предложения. Закончи мысль полностью, не обрывай на полуслове.';
+  }
 
-    // === RAG: добавляем контекст ===
-    if (_rag != null && _rag!.isReady) {
-      try {
-        final rawCtx = await _rag!.buildContext(userText, k: 2);
-        // Обрезка каждого фрагмента до ~200 символов, чтобы не раздувать промпт
-        final ctx = rawCtx
-            .split('\n\n')
-            .map((f) => f.length > 200 ? '${f.substring(0, 200)}…' : f)
-            .join('\n\n');
-        if (ctx.isNotEmpty) {
-          systemPrompt += '\n\nПримеры того, как профессиональные психологи отвечали на похожие переживания. НЕ цитируй их дословно, используй как образец тона и структуры:\n\n$ctx';
-          debugPrint('RAG: добавлено ${ctx.length} символов контекста');
-        }
-      } catch (e) {
-        debugPrint('RAG search error: $e');
-      }
+  Future<ChatMessage?> _buildRagMessage(String userText) async {
+    if (_rag == null || !_rag!.isReady) return null;
+    try {
+      final rawCtx = await _rag!.buildContext(userText, k: 2);
+      final ctx = rawCtx
+          .split('\n\n')
+          .map((x) => x.length > 200 ? '${x.substring(0, 200)}…' : x)
+          .join('\n\n');
+      if (ctx.isEmpty) return null;
+      debugPrint('RAG: добавлено ${ctx.length} символов контекста');
+      return ChatMessage(
+        role: 'system',
+        content: 'Примеры того, как профессиональные психологи отвечали на похожие переживания. '
+            'НЕ цитируй их дословно, используй как образец тона и структуры:\n\n$ctx',
+      );
+    } catch (e) {
+      debugPrint('RAG search error: $e');
+      return null;
     }
+  }
+
+  Future<List<ChatMessage>> _buildChatHistory(String userText) async {
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('user_name') ?? 'друг';
+    final city = prefs.getString('user_city') ?? '';
+
+    final systemPrompt = await _buildSystemPrompt();
+    final ragMsg = await _buildRagMessage(userText);
 
     final result = <ChatMessage>[
       ChatMessage(role: 'system', content: systemPrompt),
+      if (ragMsg != null) ragMsg,
     ];
 
     final filtered = <String>[];
@@ -502,20 +514,8 @@ class _SpaceScreenState extends State<SpaceScreen> {
     final docDir = await getApplicationDocumentsDirectory();
     final kvPath = '${docDir.path}/kv_prefix.bin';
 
-    final name = prefs.getString('user_name') ?? 'друг';
-    final city = prefs.getString('user_city') ?? '';
-    var prefix = 'name=$name|city=$city';
-    if (_rag != null && _rag!.isReady) {
-      try {
-        final rawCtx = await _rag!.buildContext(userText, k: 2);
-        final ctx = rawCtx
-            .split('\n\n')
-            .map((f) => f.length > 200 ? '${f.substring(0, 200)}…' : f)
-            .join('\n\n');
-        prefix += '|rag=$ctx';
-      } catch (_) {}
-    }
-    final hash = sha256.convert(utf8.encode(prefix)).toString();
+    final sys = await _buildSystemPrompt();
+    final hash = sha256.convert(utf8.encode(sys)).toString();
 
     final savedHash = prefs.getString(_kvHashPrefKey);
     final kvExists = await File(kvPath).exists();
@@ -525,8 +525,12 @@ class _SpaceScreenState extends State<SpaceScreen> {
       if (ok) {
         _kvCachePath = kvPath;
         _kvCacheHash = hash;
+        // KV восстановлен: system+RAG уже в контексте, RAG не нужен,
+        // сохранять KV повторно тоже не нужно (system не менялся).
         debugPrint('[KV] restored, sending only new user message');
-        return (<ChatMessage>[ChatMessage(role: 'user', content: userText)], false);
+        return (<ChatMessage>[
+          ChatMessage(role: 'user', content: userText),
+        ], false);
       }
       debugPrint('[KV] loadKvState failed, falling back to full prefill');
     }

@@ -12,6 +12,7 @@ dependencies:
   system_info2: ^4.0.0
   device_info_plus: ^10.0.0
   http: ^1.2.0
+  crypto: ^3.0.6
   flutter:
     sdk: flutter
 
@@ -39,8 +40,6 @@ flutter:
 
   assets:
     - assets/tokenizer.json
-    - assets/models/part1.bin
-    - assets/models/part2.bin
     - assets/animations/
     - assets/rag/
     - assets/embedding_model/

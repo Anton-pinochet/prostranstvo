@@ -59,3 +59,12 @@ patch_*.sh
 rag_watch.sh
 profile_rag.sh
 migrate_vec_chunks.py
+
+# backups from scripts
+*.bak*
+*.part
+
+# local helper scripts (not for repo)
+kv.sh
+kv_patch.sh
+setup_vulkan_fork.sh
