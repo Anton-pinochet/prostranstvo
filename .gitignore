@@ -68,3 +68,7 @@ migrate_vec_chunks.py
 kv.sh
 kv_patch.sh
 setup_vulkan_fork.sh
+
+# БД в корне (временные, вне Git)
+/chitchat.db
+/embeddings.db
